@@ -36,12 +36,19 @@ router.post('/create', async (req, res) => {
 // Multer storage configuration
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, './uploads/'); // Destination folder for uploads
+        const uploadPath = path.join(__dirname, '../uploads/');
+        // Ensure uploads directory exists
+        if (!fs.existsSync(uploadPath)) {
+            fs.mkdirSync(uploadPath, { recursive: true });
+        }
+        cb(null, uploadPath); // Destination folder for uploads
     },
     filename: function (req, file, cb) {
         const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
         const extension = path.extname(file.originalname);
-        cb(null, file.fieldname + '-' + uniqueSuffix + extension); // Unique filename
+        const uniqueFilename = file.originalname + '-' + uniqueSuffix + extension;
+        file.uniqueFilename = uniqueFilename; // Add unique filename to file object
+        cb(null, uniqueFilename); // Unique filename
     }
 });
 
@@ -73,8 +80,7 @@ router.post('/update/:challengeId', upload.array('file', 5), async (req, res) =>
 
         // Handle file uploads and update files array
         if (req.files && req.files.length > 0) {
-            console.log("recieved files");
-            const newFiles = req.files.map(file => file.filename);
+            const newFiles = req.files.map(file => file.uniqueFilename); // Use unique filenames
             existingChallenge.files = existingChallenge.files.concat(newFiles);
         }
 

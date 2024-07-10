@@ -4,13 +4,13 @@ const ChallengeModal = ({ challengeId, closeModal }) => {
     const [formData, setFormData] = useState({
         flag: '',
         flag_data: 'case_sensitive',
-        files: [],
+        file: [],
         state: 'hidden'
     });
 
     const handleChange = (e) => {
         if (e.target.type === 'file') {
-            console.log(e.target.files);
+            console.log();
             setFormData({ ...formData, [e.target.name]: e.target.files });
         } else {
             setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -26,9 +26,9 @@ const ChallengeModal = ({ challengeId, closeModal }) => {
         formDataToSend.append('state', formData.state);
 
         // Append each file to FormData
-        if (formData.files.length > 0) {
-            for (let i = 0; i < formData.files.length; i++) {
-                formDataToSend.append('file', formData.files[i]);
+        if (formData.file.length > 0) {
+            for (let i = 0; i < formData.file.length; i++) {
+                formDataToSend.append('file', formData.file[i]);
             }
         }
 
