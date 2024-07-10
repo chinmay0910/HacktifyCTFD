@@ -37,12 +37,12 @@ const Navbar = () => {
           <div className="flex space-x-4">
             <Link to="/" className="text-gray-400 hover:text-white">Users</Link>
             <Link to="/" className="text-gray-400 hover:text-white">Teams</Link>
-            <Link to="/" className="text-gray-400 hover:text-white">Scoreboard</Link>
+            <Link to="/userchallenges" className="text-gray-400 hover:text-white">Scoreboard</Link>
             <Link to="/challenge" className="text-gray-400 hover:text-white">Challenges</Link>
           </div>
           <div className="flex space-x-4 ms-auto">
             <Link to="/" className="text-gray-400 hover:text-white">Register</Link>
-            <Link to="/" className="text-gray-400 hover:text-white">Login</Link>
+            <Link to="/login" className="text-gray-400 hover:text-white">Login</Link>
           </div>
         </div>
       </div>

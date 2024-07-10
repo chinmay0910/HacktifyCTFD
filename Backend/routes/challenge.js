@@ -93,6 +93,18 @@ router.post('/update/:challengeId', upload.array('file', 5), async (req, res) =>
         console.error('Error updating challenge:', error);
         res.status(500).json({ error: 'Failed to update challenge' });
     }
+
+
+    router.get('/all', async (req, res) => {
+        try {
+            const challenges = await Challenge.find();
+            res.status(200).json(challenges);
+        } catch (error) {
+            console.error('Error fetching challenges:', error);
+            res.status(500).json({ error: 'Failed to fetch challenges', message: error.message });
+        }
+    });
+    
 });
 
 module.exports = router;
