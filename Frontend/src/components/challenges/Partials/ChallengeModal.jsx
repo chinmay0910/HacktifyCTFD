@@ -1,20 +1,38 @@
 import React, { useState } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlusCircle, faMinusCircle } from '@fortawesome/free-solid-svg-icons';
 
-const ChallengeModal = ({ challengeId, closeModal }) => {
+const ChallengeModal = ({ challengeId, selectedOption, closeModal }) => {
     const [formData, setFormData] = useState({
         flag: '',
         flag_data: 'case_sensitive',
         file: [],
-        state: 'hidden'
+        state: 'hidden',
+        language: '',
+        choices: ['']
     });
 
     const handleChange = (e) => {
         if (e.target.type === 'file') {
-            console.log();
             setFormData({ ...formData, [e.target.name]: e.target.files });
         } else {
             setFormData({ ...formData, [e.target.name]: e.target.value });
         }
+    };
+
+    const handleChoiceChange = (index, event) => {
+        const newChoices = formData.choices.slice();
+        newChoices[index] = event.target.value;
+        setFormData({ ...formData, choices: newChoices });
+    };
+
+    const addChoice = () => {
+        setFormData({ ...formData, choices: [...formData.choices, ''] });
+    };
+
+    const removeChoice = (index) => {
+        const newChoices = formData.choices.filter((_, i) => i !== index);
+        setFormData({ ...formData, choices: newChoices });
     };
 
     const handleSubmit = async (e) => {
@@ -25,7 +43,12 @@ const ChallengeModal = ({ challengeId, closeModal }) => {
         formDataToSend.append('flag_data', formData.flag_data);
         formDataToSend.append('state', formData.state);
 
-        // Append each file to FormData
+        if (selectedOption === 'code') {
+            formDataToSend.append('language', formData.language);
+        } else if (selectedOption === 'multiple_choice') {
+            formDataToSend.append('choices', JSON.stringify(formData.choices));
+        }
+
         if (formData.file.length > 0) {
             for (let i = 0; i < formData.file.length; i++) {
                 formDataToSend.append('file', formData.file[i]);
@@ -43,17 +66,16 @@ const ChallengeModal = ({ challengeId, closeModal }) => {
             }
 
             console.log('Challenge updated successfully');
-            closeModal(); // Close modal after successful update
+            closeModal();
         } catch (error) {
             console.error('Error updating challenge:', error);
-            // Optionally handle error (e.g., show an error message)
         }
     };
 
     return (
         <div className="fixed inset-0 z-50 overflow-auto bg-black bg-opacity-50 flex items-center justify-center">
-            <div className="modal-dialog modal-lg">
-                <div className="modal-content bg-white shadow-lg rounded-lg">
+            <div className="modal-dialog modal-lg w-2/3 h-2/3">
+                <div className="modal-content bg-white shadow-lg rounded-lg h-full overflow-y-scroll">
                     <div className="modal-header bg-gray-100 border-b p-4 rounded-t-lg flex flex-row justify-between items-center">
                         <h5 className="modal-title text-xl font-semibold">Challenge Options</h5>
                         <button type="button" className="close text-gray-500" onClick={closeModal}>
@@ -112,6 +134,80 @@ const ChallengeModal = ({ challengeId, closeModal }) => {
                                 />
                                 <sub className="text-muted">Attach multiple files using Control+Click or Cmd+Click</sub>
                             </div>
+
+                            {selectedOption === 'code' && (
+                                <div className="form-group mb-4">
+                                    <label className="block text-gray-700" htmlFor='language'>
+                                        Language:
+                                        <br />
+                                        <small className="form-text text-gray-500">
+                                            Select the programming language for this challenge
+                                        </small>
+                                    </label>
+                                    <select
+                                        id="language"
+                                        name="language"
+                                        className="form-control outline-0 w-full p-2 border border-gray-300 rounded mt-1 focus:border-green-500 focus:ring focus:ring-green-200"
+                                        value={formData.language}
+                                        onChange={handleChange}
+                                    >
+                                        <option value="">Select Language</option>
+                                        <option value="python">Python</option>
+                                        <option value="javascript">JavaScript</option>
+                                        <option value="java">Java</option>
+                                        <option value="c++">C++</option>
+                                        <option value="c#">C#</option>
+                                    </select>
+                                </div>
+                            )}
+
+                            {selectedOption === 'multiple_choice' && (
+                                <div className="form-group mb-4 max-w-[100%]">
+                                    <div className="flex flex-row justify-start">
+
+                                    <label className="block text-gray-700">
+                                        Choices:
+                                        <br />
+                                        <small className="form-text text-gray-500">
+                                            Add the choices for the MCQ
+                                        </small>
+                                    </label>
+                                    <button
+                                            type="button"
+                                            className="btn btn-secondary p-2"
+                                            onClick={addChoice}
+                                        >
+                                            <FontAwesomeIcon icon={faPlusCircle} className='text-2xl'/>
+                                        </button>
+                                    </div>
+                                    <div className="flex flex-col space-y-2">
+                                        {formData.choices.map((choice, index) => (
+                                            <div key={index} className="flex items-center space-x-2">
+                                                <input
+                                                    type="text"
+                                                    className="form-control outline-0 w-full p-2 border border-gray-300 rounded focus:border-green-500 focus:ring focus:ring-green-200"
+                                                    name={`choice-${index}`}
+                                                    placeholder={`Enter choice ${index + 1}`}
+                                                    value={choice}
+                                                    onChange={(e) => handleChoiceChange(index, e)}
+                                                />
+                                                {formData.choices.length > 1 && (
+                                                    <button
+                                                        type="button"
+                                                        className="btn btn-danger p-2"
+                                                        onClick={() => removeChoice(index)}
+                                                    >
+                                                        <FontAwesomeIcon icon={faMinusCircle} className="text-2xl" />
+                                                    </button>
+                                                )}
+                                            </div>
+                                        ))}
+                                        
+                                    </div>
+                                    <sub className="text-muted">Copy the Correct Choice to map as a Flag</sub>
+                                </div>
+                            )}
+
                             <div className="mb-4">
                                 <label htmlFor="state" className="block text-sm font-medium text-gray-700">
                                     State:

@@ -55,6 +55,9 @@ const challengeSchema = new mongoose.Schema({
         type: Number,
         default: 0
     },
+    choices: {
+        type: [String], default: []
+    },
     files: { type: [String], default: [] }, // Array of file paths or references
     tags: [String], // Array of tags
     hints: [String] // Array of hint strings

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import SimpleMDE from 'react-simplemde-editor';
 import 'easymde/dist/easymde.min.css';
-import ChallengeModal from './ChallengeModal'; // Adjust path as needed
+import ChallengeModal from './Partials/ChallengeModal';
 
 const CreateChallengeForm = ({ selectedOption }) => {
     const [formData, setFormData] = useState({
@@ -9,15 +9,15 @@ const CreateChallengeForm = ({ selectedOption }) => {
         category: '',
         description: '',
         value: '',
-        language: '',
-        type: selectedOption || 'standard'
+        type: selectedOption || 'standard',
     });
 
     const [showModal, setShowModal] = useState(false);
     const [challengeId, setChallengeId] = useState(null);
 
     const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
+        const { name, value } = e.target;
+        setFormData({ ...formData, [name]: value });
     };
 
     const handleDescriptionChange = (value) => {
@@ -28,7 +28,6 @@ const CreateChallengeForm = ({ selectedOption }) => {
         e.preventDefault();
 
         try {
-            // Replace with your backend URL
             const url = 'http://localhost:5000/api/challenges/create'; // Replace with your actual backend endpoint
 
             const response = await fetch(url, {
@@ -46,23 +45,19 @@ const CreateChallengeForm = ({ selectedOption }) => {
             const data = await response.json();
             console.log('Challenge created:', data);
 
-            // Show modal and set challengeId
             setShowModal(true);
             setChallengeId(data.challengeId);
 
-            // Reset form data or perform additional actions after successful creation
             setFormData({
                 name: '',
                 category: '',
                 description: '',
                 value: '',
-                language: '',
-                type: selectedOption || 'standard'
+                type: selectedOption || 'standard',
             });
 
         } catch (error) {
             console.error('Error creating challenge:', error);
-            // Handle error states here, e.g., show an error message to the user
         }
     };
 
@@ -75,7 +70,7 @@ const CreateChallengeForm = ({ selectedOption }) => {
             <div id="create-chal-entry-div">
                 <form onSubmit={handleSubmit} className="space-y-6">
                     <div className="form-group">
-                        <label className="block text-gray-700">
+                        <label className="block text-gray-700" htmlFor='name'>
                             Name:
                             <br />
                             <small className="form-text text-gray-500">
@@ -85,6 +80,7 @@ const CreateChallengeForm = ({ selectedOption }) => {
                         <input
                             type="text"
                             className="form-control outline-0 w-full p-2 border border-gray-300 rounded mt-1 focus:border-green-500 focus:ring focus:ring-green-200"
+                            id='name'
                             name="name"
                             placeholder="Enter challenge name"
                             value={formData.name}
@@ -93,7 +89,7 @@ const CreateChallengeForm = ({ selectedOption }) => {
                     </div>
 
                     <div className="form-group">
-                        <label className="block text-gray-700">
+                        <label className="block text-gray-700" htmlFor="category">
                             Category:
                             <br />
                             <small className="form-text text-gray-500">
@@ -103,6 +99,7 @@ const CreateChallengeForm = ({ selectedOption }) => {
                         <input
                             type="text"
                             className="form-control outline-0 w-full p-2 border border-gray-300 rounded mt-1 focus:border-green-500 focus:ring focus:ring-green-200"
+                            id="category"
                             name="category"
                             placeholder="Enter challenge category"
                             value={formData.category}
@@ -124,33 +121,8 @@ const CreateChallengeForm = ({ selectedOption }) => {
                         />
                     </div>
 
-                    {selectedOption === 'code' && (
-                        <div className="form-group">
-                            <label className="block text-gray-700">
-                                Language:
-                                <br />
-                                <small className="form-text text-gray-500">
-                                    Select the programming language for this challenge
-                                </small>
-                            </label>
-                            <select
-                                name="language"
-                                className="form-control outline-0 w-full p-2 border border-gray-300 rounded mt-1 focus:border-green-500 focus:ring focus:ring-green-200"
-                                value={formData.language}
-                                onChange={handleChange}
-                            >
-                                <option value="">Select Language</option>
-                                <option value="python">Python</option>
-                                <option value="javascript">JavaScript</option>
-                                <option value="java">Java</option>
-                                <option value="c++">C++</option>
-                                <option value="c#">C#</option>
-                            </select>
-                        </div>
-                    )}
-
                     <div className="form-group">
-                        <label className="block text-gray-700">
+                        <label className="block text-gray-700" htmlFor='value'>
                             Value:
                             <br />
                             <small className="form-text text-gray-500">
@@ -160,6 +132,7 @@ const CreateChallengeForm = ({ selectedOption }) => {
                         <input
                             type="number"
                             className="form-control outline-0 w-full p-2 border border-gray-300 rounded mt-1 focus:border-green-500 focus:ring focus:ring-green-200"
+                            id="value"
                             name="value"
                             placeholder="Enter value"
                             value={formData.value}
@@ -179,7 +152,7 @@ const CreateChallengeForm = ({ selectedOption }) => {
                     </div>
                 </form>
             </div>
-            {showModal && <ChallengeModal challengeId={challengeId} closeModal={closeModal} />}
+            {showModal && <ChallengeModal challengeId={challengeId} selectedOption={selectedOption} closeModal={closeModal} />}
         </div>
     );
 };
