@@ -10,6 +10,8 @@ import {
 import Navbar from './components/navbar/Navbar';
 import MainChallenge from './components/challenges/MainChallenge'
 import CreateChallenge from './components/challenges/CreateChallenge';
+import LoginPage from './components/Login/loginPage';
+import UserChallengePage from './components/UserChallenges/userChallengesPage';
 
 
 function App() {
@@ -20,6 +22,8 @@ function App() {
           <Routes>
             <Route exact path='/challenge' element={<MainChallenge />} />
             <Route exact path='/challenge/create' element={<CreateChallenge />} />
+            <Route exact path='/login' element={<LoginPage />} />
+            <Route exact path='/userchallenges' element={<UserChallengePage/>} />
 
           </Routes>
         </Router>
