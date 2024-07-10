@@ -26,7 +26,7 @@ const LoginPage = () => {
       const data = await response.json();
 
       if (response.ok) {
-        navigate("/challenge");
+        navigate("/userchallenges");
       } else {
         // Handle login error here
         setError(data.error || 'An error occurred');
