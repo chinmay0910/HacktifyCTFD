@@ -4,7 +4,7 @@ import React from 'react';
 // component imports
 import PageHeader from '../navbar/PageHeader';
 import RadioCard from './Partials/RadioCard';
-import CreateChallengeForm from './Partials/CreateChallengeForm';
+import CreateChallengeForm from './CreateChallengeForm';
 
 const CreateChallenge = () => {
     const [selectedOption, setSelectedOption] = useState('standard');
