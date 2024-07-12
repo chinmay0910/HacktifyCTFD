@@ -151,7 +151,7 @@ const AllChallenges = () => {
               <td className="py-2 px-4 border-b">{challenge.value}</td>
               <td className="py-2 px-4 border-b">{challenge.category}</td>
               <td className="py-2 px-4 border-b">{challenge.type}</td>
-              <td className="py-2 px-4 border-b">{challenge.state}</td>
+              <td className="py-2 px-4 border-b"><span className={`px-2 text-center rounded-sm text-white font-semibold ${challenge.state == "hidden" ? "bg-red-500" : "bg-green-500"}`}>{challenge.state.charAt(0).toUpperCase() + challenge.state.slice(1)}</span></td>
               <td className="py-2 px-4 border-b">
                 <input
                   type="checkbox"
