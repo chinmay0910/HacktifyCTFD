@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import CodeEditor from '../CodeEditor/CodeEditorFeild';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCircle, faCircleMinus, faCirclePlay, faCirclePlus, faRemove } from '@fortawesome/free-solid-svg-icons';
+import { faCircleMinus, faCirclePlus } from '@fortawesome/free-solid-svg-icons';
 
 const ChallengeModal = ({ challengeId, selectedOption, closeModal }) => {
     const [formData, setFormData] = useState({
@@ -121,6 +121,8 @@ const ChallengeModal = ({ challengeId, selectedOption, closeModal }) => {
                                         language={formData.language}
                                         onCodeChange={handleCodeChange}
                                         setEditorOutput={setEditorOutput}
+                                        formData={formData}
+                                        setFormData={setFormData}
                                     />
                                 </>
                             )}
@@ -146,13 +148,14 @@ const ChallengeModal = ({ challengeId, selectedOption, closeModal }) => {
                                     Flag:
                                     <small className="text-gray-500 block">Static flag for your challenge</small>
                                 </label>
-                                <input
+                                <textarea
                                     id="flag"
                                     name="flag"
                                     type="text"
                                     placeholder='Enter your flag'
-                                    className="form-input block w-full sm:text-sm border border-gray-300 rounded-sm focus:ring focus:ring-green-200 outline-0 p-2"
+                                    className="form-input block w-full sm:text-sm border border-gray-300 rounded-sm focus:ring focus:ring-green-200 outline-0 p-2 resize-none size-fit"
                                     value={formData.flag}
+                                    disabled={selectedOption === 'code'}
                                     onChange={handleChange}
                                 />
                             </div>
