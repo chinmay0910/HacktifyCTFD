@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import Editor from '@monaco-editor/react';
 
-const CodeEditor = ({ language, onCodeChange, setEditorOutput }) => {
+const CodeEditor = ({ language, onCodeChange, setEditorOutput, formData, setFormData }) => {
     const [code, setCode] = useState('');
     const [error, setError] = useState('');
 
@@ -40,9 +40,11 @@ const CodeEditor = ({ language, onCodeChange, setEditorOutput }) => {
             const data = await response.json();
             if (!response.ok) {
                 setError(data.error || 'Error running code. Please try again.');
+                setFormData({ ...formData, flag: '' });
                 setEditorOutput('');
             } else {
                 setEditorOutput(data.output);
+                setFormData({ ...formData, flag: data.output });
                 setError('');
             }
         } catch (err) {
@@ -71,6 +73,7 @@ const CodeEditor = ({ language, onCodeChange, setEditorOutput }) => {
             <button
                 className="bg-blue-500 hover:bg-blue-700 text-white font-bold rounded mt-2 w-2/4 p-1 mx-auto"
                 onClick={runCode}
+                type='button'
             >
                 Run & Record Flag
             </button>
