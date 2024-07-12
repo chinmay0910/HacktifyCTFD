@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import React from 'react';
 
 // component imports
@@ -11,8 +11,12 @@ const CreateChallenge = () => {
 
     const handleChange = (e) => {
         setSelectedOption(e.target.value);
-        console.log(e.target.value);
     };
+
+    useEffect(() => {
+        // Ensure the selectedOption state is updated before rendering the form
+        console.log(`Selected Option: ${selectedOption}`);
+    }, [selectedOption]);
 
     return (
         <>
@@ -66,7 +70,10 @@ const CreateChallenge = () => {
                     </div>
                 </div>
                 <div className='w-3/4'>
-                    <CreateChallengeForm selectedOption={selectedOption} />
+                    {
+                        selectedOption && 
+                        <CreateChallengeForm selectedOption={selectedOption} />
+                    }
                 </div>
             </div>
         </>
