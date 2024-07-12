@@ -29,7 +29,7 @@ const CodeEditor = ({ language, onCodeChange, setEditorOutput, formData, setForm
 
     const runCode = async () => {
         try {
-            const response = await fetch('http://localhost:5001/runcode', {
+            const response = await fetch('http://localhost:5000/api/executecode/runcode', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -71,7 +71,7 @@ const CodeEditor = ({ language, onCodeChange, setEditorOutput, formData, setForm
                 options={{ automaticLayout: true }}
             />
             <button
-                className="bg-blue-500 hover:bg-blue-700 text-white font-bold rounded mt-2 w-2/4 p-1 mx-auto"
+                className="bg-gray-500 hover:bg-gray-700 text-white font-bold rounded mt-2 w-2/4 p-1 mx-auto"
                 onClick={runCode}
                 type='button'
             >

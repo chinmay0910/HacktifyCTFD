@@ -7,12 +7,13 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons'
 
 // import components
 import PageHeader from '../navbar/PageHeader'
-
+import AllChallenges from './AllChallenges'
 
 const MainChallenge = () => {
   return (
     <>
       <PageHeader pageTitle="Challenges" route="/challenge/create"/>
+      <AllChallenges />
     </>
   )
 }

@@ -103,6 +103,16 @@ router.post('/update/:challengeId', upload.array('file', 5), async (req, res) =>
    
 });
 
+// search challenge by ID
+router.get('/details/:id', async (req, res) => {
+    try {
+        const challenges = await Challenge.findOne({_id: req.params.id});
+        res.status(200).json(challenges);
+    } catch (error) {
+        console.error('Error fetching challenges:', error);
+        res.status(500).json({ error: 'Failed to fetch challenges', message: error.message });
+    }
+    });
 
 router.get('/all', async (req, res) => {
     try {
@@ -113,5 +123,33 @@ router.get('/all', async (req, res) => {
         res.status(500).json({ error: 'Failed to fetch challenges', message: error.message });
     }
     });
+
+router.get('/toDisplayAllChallenges', async (req, res) => {
+    try {
+        const challenges = await Challenge.find().select('name value category type state');
+        res.status(200).json(challenges);
+    } catch (error) {
+        console.error('Error fetching challenges:', error);
+        res.status(500).json({ error: 'Failed to fetch challenges', message: error.message });
+    }
+    });
+
+// Delete challenges by IDs
+router.delete('/deleteChallenges', async (req, res) => {
+    const { ids } = req.body;
+  
+    if (!ids || !Array.isArray(ids)) {
+      return res.status(400).json({ error: 'Invalid input. Please provide an array of IDs.' });
+    }
+  
+    try {
+      const result = await Challenge.deleteMany({ _id: { $in: ids } });
+      res.status(200).json({ message: `${result.deletedCount} challenges deleted successfully.` });
+    } catch (error) {
+      console.error('Error deleting challenges:', error);
+      res.status(500).json({ error: 'Failed to delete challenges', message: error.message });
+    }
+  });
+  
 
 module.exports = router;

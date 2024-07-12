@@ -12,6 +12,7 @@ app.use(express.json())
 
 app.use('/api/auth',require('./routes/auth.js'))
 app.use('/api/challenges',require('./routes/challenge.js'))
+app.use('/api/executecode',require('./routes/runcode.js'))
 
 app.listen(port,()=>{
     console.log(`Listening on port: ${port}`)
