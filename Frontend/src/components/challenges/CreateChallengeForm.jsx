@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import SimpleMDE from 'react-simplemde-editor';
 import 'easymde/dist/easymde.min.css';
 import ChallengeModal from './Partials/ChallengeModal';
@@ -9,8 +9,12 @@ const CreateChallengeForm = ({ selectedOption }) => {
         category: '',
         description: '',
         value: '',
-        type: selectedOption || 'standard',
+        type: selectedOption,
     });
+
+    useEffect(() => {
+        setFormData({ ...formData, type: selectedOption });
+    }, [selectedOption]);
 
     const [showModal, setShowModal] = useState(false);
     const [challengeId, setChallengeId] = useState(null);
@@ -53,7 +57,7 @@ const CreateChallengeForm = ({ selectedOption }) => {
                 category: '',
                 description: '',
                 value: '',
-                type: selectedOption || 'standard',
+                type: selectedOption,
             });
 
         } catch (error) {
