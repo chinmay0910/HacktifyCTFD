@@ -29,7 +29,7 @@ const CodeEditor = ({ language, onCodeChange, setEditorOutput, formData, setForm
 
     const runCode = async () => {
         try {
-            const response = await fetch('http://localhost:5001/runcode', {
+            const response = await fetch('http://localhost:5000/api/executecode/runcode', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
