@@ -1,26 +1,24 @@
 
-
-
 import React, { useEffect, useState } from 'react';
 import PageHeader from '../navbar/PageHeader';
-
 
 import ChallengeButton from '../ChallengeButtons/buttons';
 
 import Modal from '../modal/modal';
-
-
 
 const UserChallengePage = () => {
   const [challenges, setChallenges] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedChallenge, setSelectedChallenge] = useState(null);
   const [answer, setAnswer] = useState('');
+  const [attempts, setAttempts] = useState(0);
+  const [feedback, setFeedback] = useState(null);
 
   useEffect(() => {
     const fetchChallenges = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/challenges/all'); // Ensure this URL is correct
+
+        const response = await fetch('http://localhost:5000/api/challenges/all');
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
@@ -49,6 +47,33 @@ const UserChallengePage = () => {
     setIsModalOpen(false);
     setSelectedChallenge(null);
     setAnswer('');
+    setAttempts(0);
+    setFeedback(null);
+  };
+
+  const handleSubmit = () => {
+    const isCorrect = selectedChallenge.flag_data === 'case_sensitive'
+      ? answer === selectedChallenge.flag
+      : answer.toLowerCase() === selectedChallenge.flag.toLowerCase();
+
+    if (isCorrect) {
+      setFeedback('Correct answer!');
+      setChallenges(prevChallenges =>
+        prevChallenges.map(challenge =>
+          challenge._id === selectedChallenge._id
+            ? { ...challenge, solved_by_me: true }
+            : challenge
+        )
+      );
+    } else {
+      setAttempts(prev => prev + 1);
+      if (attempts + 1 >= 3) {
+        setFeedback('No more attempts left');
+        setTimeout(closeModal, 2000); // Close modal after 2 seconds
+      } else {
+        setFeedback('Wrong answer, try again.');
+      }
+    }
   };
 
   const groupByCategory = (challenges) => {
@@ -76,6 +101,7 @@ const UserChallengePage = () => {
                   key={index}
                   challenge={challenge}
                   onClick={handleButtonClick}
+                  solved={challenge.solved_by_me}
                 />
               ))}
             </div>
@@ -89,6 +115,9 @@ const UserChallengePage = () => {
           challenge={selectedChallenge}
           answer={answer}
           setAnswer={setAnswer}
+          handleSubmit={handleSubmit}
+          attempts={attempts}
+          feedback={feedback}
         />
       )}
     </>

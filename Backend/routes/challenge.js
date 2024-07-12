@@ -106,7 +106,7 @@ router.post('/update/:challengeId', upload.array('file', 5), async (req, res) =>
 
 router.get('/all', async (req, res) => {
     try {
-        const challenges = await Challenge.find().select('name value category type description');
+        const challenges = await Challenge.find();
         res.status(200).json(challenges);
     } catch (error) {
         console.error('Error fetching challenges:', error);
