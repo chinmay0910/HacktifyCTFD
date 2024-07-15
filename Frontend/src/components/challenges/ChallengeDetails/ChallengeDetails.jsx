@@ -1,10 +1,13 @@
-// ChallengeDetailsPage.js
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import PageHeader from '../../navbar/PageHeader';
+import EditNavigation from './EditChallenge/EditNavigation';
+import Content from './EditChallenge/Content';
 
 const ChallengeDetailsPage = () => {
   const { id } = useParams(); // Get challenge ID from URL params
   const [challenge, setChallenge] = useState(null);
+  const [activeTab, setActiveTab] = useState('Files');
 
   useEffect(() => {
     const fetchChallenge = async () => {
@@ -19,23 +22,34 @@ const ChallengeDetailsPage = () => {
 
     fetchChallenge();
   }, [id]);
-
   if (!challenge) {
     return <div>Loading...</div>;
   }
 
   return (
-    <div className="container mx-auto p-4 my-8 w-full">
-      <h2 className="text-2xl font-bold mb-4">Challenge Details</h2>
-      <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-4">
-        <p><strong>ID:</strong> {challenge._id}</p>
-        <p><strong>Name:</strong> {challenge.name}</p>
-        <p><strong>Value:</strong> {challenge.value}</p>
-        <p><strong>Category:</strong> {challenge.category}</p>
-        <p><strong>Type:</strong> {challenge.type}</p>
-        <p><strong>State:</strong> {challenge.state}</p>
-        {/* Add more details as needed */}
+    <div className="w-full">
+      <PageHeader
+        challengeDetails={{
+          name: challenge.name,
+          category: challenge.category,
+          type: challenge.type,
+          state: challenge.state,
+          value: challenge.value
+        }}
+      />
+      <div className="flex flex-row">
+        <div className="w-1/2 flex flex-col">
+          <EditNavigation activeTab={activeTab} setActiveTab={setActiveTab}/>
+          <div className="m-8">
+            <Content activeTab={activeTab} challengeId={id} />
+          </div>
+        </div>
+        <div className="w-1/2">
+          ss
+        </div>
+
       </div>
+
     </div>
   );
 };
