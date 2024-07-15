@@ -116,13 +116,14 @@ router.get('/details/:id', async (req, res) => {
 
 router.get('/all', async (req, res) => {
     try {
-        const challenges = await Challenge.find();
-        res.status(200).json(challenges);
+        const visibleChallenges = await Challenge.find({ state: "visible" });
+        res.status(200).json(visibleChallenges);
     } catch (error) {
         console.error('Error fetching challenges:', error);
         res.status(500).json({ error: 'Failed to fetch challenges', message: error.message });
     }
-    });
+});
+
 
 router.get('/toDisplayAllChallenges', async (req, res) => {
     try {

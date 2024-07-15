@@ -1,9 +1,6 @@
-
 import React, { useEffect, useState } from 'react';
 import PageHeader from '../navbar/PageHeader';
-
 import ChallengeButton from '../ChallengeButtons/buttons';
-
 import Modal from '../modal/modal';
 
 const UserChallengePage = () => {
@@ -17,19 +14,12 @@ const UserChallengePage = () => {
   useEffect(() => {
     const fetchChallenges = async () => {
       try {
-
         const response = await fetch('http://localhost:5000/api/challenges/all');
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
-        const text = await response.text();
-        try {
-          const data = JSON.parse(text);
-          setChallenges(data);
-        } catch (err) {
-          console.error('Error parsing JSON:', err);
-          console.error('Response text:', text);
-        }
+        const data = await response.json();
+        setChallenges(data);
       } catch (error) {
         console.error('Error fetching challenges:', error);
       }
@@ -52,26 +42,56 @@ const UserChallengePage = () => {
   };
 
   const handleSubmit = () => {
-    const isCorrect = selectedChallenge.flag_data === 'case_sensitive'
-      ? answer === selectedChallenge.flag
-      : answer.toLowerCase() === selectedChallenge.flag.toLowerCase();
+    if(selectedChallenge.type === 'manual_verification'){
+      setFeedback('Your response is submitted for Review!');
 
-    if (isCorrect) {
-      setFeedback('Correct answer!');
-      setChallenges(prevChallenges =>
-        prevChallenges.map(challenge =>
-          challenge._id === selectedChallenge._id
-            ? { ...challenge, solved_by_me: true }
-            : challenge
-        )
-      );
-    } else {
-      setAttempts(prev => prev + 1);
-      if (attempts + 1 >= 3) {
-        setFeedback('No more attempts left');
-        setTimeout(closeModal, 2000); // Close modal after 2 seconds
+    }
+
+    if (selectedChallenge.type === 'code') {
+      // Handle code challenge submission
+      const isCorrect = answer.trim() === selectedChallenge.flag.trim();
+
+      if (isCorrect) {
+        setFeedback('Correct answer!');
+        setChallenges(prevChallenges =>
+          prevChallenges.map(challenge =>
+            challenge._id === selectedChallenge._id
+              ? { ...challenge, solved_by_me: true }
+              : challenge
+          )
+        );
       } else {
-        setFeedback('Wrong answer, try again.');
+        setAttempts(prev => prev + 1);
+        if (attempts + 1 >= 3) {
+          setFeedback('No more attempts left');
+          setTimeout(closeModal, 2000); // Close modal after 2 seconds
+        } else {
+          setFeedback('Wrong answer, try again.');
+        }
+      }
+    } else {
+      // Handle other challenge types (e.g., standard, multiple_choice)
+      const isCorrect = selectedChallenge.flag_data === 'case_sensitive'
+        ? answer === selectedChallenge.flag
+        : answer.toLowerCase() === selectedChallenge.flag.toLowerCase();
+
+      if (isCorrect) {
+        setFeedback('Correct answer!');
+        setChallenges(prevChallenges =>
+          prevChallenges.map(challenge =>
+            challenge._id === selectedChallenge._id
+              ? { ...challenge, solved_by_me: true }
+              : challenge
+          )
+        );
+      } else {
+        setAttempts(prev => prev + 1);
+        if (attempts + 1 >= 3) {
+          setFeedback('No more attempts left');
+          setTimeout(closeModal, 2000); // Close modal after 2 seconds
+        } else {
+          setFeedback('Wrong answer, try again.');
+        }
       }
     }
   };
