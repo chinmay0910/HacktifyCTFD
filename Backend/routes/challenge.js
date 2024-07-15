@@ -150,6 +150,65 @@ router.delete('/deleteChallenges', async (req, res) => {
       res.status(500).json({ error: 'Failed to delete challenges', message: error.message });
     }
   });
+
+  router.get('/files/:id', async (req, res) => {
+    try {
+      const challenge = await Challenge.findById(req.params.id);
+      if (!challenge) {
+        return res.status(404).send('Challenge not found');
+      }
+      res.json(challenge.files);
+    } catch (error) {
+      res.status(500).send('Error fetching challenge');
+    }
+  });
+
+  // upload new file in specific challenges
+  router.post('/files/:id/upload', upload.single('file'), async (req, res) => {
+    try {
+      const challenge = await Challenge.findById(req.params.id);
+      if (!challenge) {
+        return res.status(404).send('Challenge not found');
+      }
   
+      challenge.files.push(req.file.filename);
+      await challenge.save();
+      res.json({ filename: req.file.filename });
+    } catch (error) {
+      res.status(500).send('Error uploading file');
+    }
+  });
+  
+
+  // delete particular file
+  router.delete('/files/:id/delete/:filename', async (req, res) => {
+    try {
+      const challenge = await Challenge.findById(req.params.id);
+      if (!challenge) {
+        return res.status(404).send('Challenge not found');
+      }
+  
+      const fileIndex = challenge.files.indexOf(req.params.filename);
+      if (fileIndex === -1) {
+        return res.status(404).send('File not found');
+      }
+  
+      challenge.files.splice(fileIndex, 1);
+      await challenge.save();
+  
+      // Delete the file from the file system
+      const filePath = path.join(__dirname, '../uploads', req.params.filename);
+    //   console.log(filePath);
+      fs.unlink(filePath, (err) => {
+        if (err) {
+          console.error('Error deleting file from filesystem:', err);
+          return res.status(500).send('Error deleting file from filesystem');
+        }
+        res.send('File deleted successfully');
+      });
+    } catch (error) {
+      res.status(500).send('Error deleting file');
+    }
+  });
 
 module.exports = router;
