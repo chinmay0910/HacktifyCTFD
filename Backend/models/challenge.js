@@ -19,11 +19,12 @@ const challengeSchema = new mongoose.Schema({
         required: true
     },
     flag: {
-        type: String,
-        default: ''
+        type: [String],
+        default: []
     },
     flag_data: {
-        type: String,
+        type: [String],
+        default: []
     },
     langauge: {
         type: String,

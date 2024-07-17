@@ -5,11 +5,11 @@ import { faCircleMinus, faCirclePlus } from '@fortawesome/free-solid-svg-icons';
 
 const ChallengeModal = ({ challengeId, selectedOption, closeModal }) => {
     const [formData, setFormData] = useState({
-        flag: '',
-        flag_data: 'case_sensitive',
+        flag: [],
+        flag_data: [],
         file: [],
         state: 'hidden',
-        language: 'python', // Default language
+        language: 'python',
         choices: [''],
         code: ''
     });

@@ -1,7 +1,7 @@
 import React from 'react';
 import Files from './Contents/Files'
-
-const Flags = () => <div>Flags Content</div>;
+import Flags from './Contents/Flags';
+// const Flags = () => <div>Flags Content</div>;
 const Topics = () => <div>Topics Content</div>;
 const Tags = () => <div>Tags Content</div>;
 const Hints = () => <div>Hints Content</div>;
@@ -14,7 +14,7 @@ const Content = ({ activeTab, challengeId }) => {
       case 'Files':
         return <Files challengeId={challengeId}/>;
       case 'Flags':
-        return <Flags />;
+        return <Flags challengeId={challengeId}/>;
       case 'Topics':
         return <Topics />;
       case 'Tags':
