@@ -158,6 +158,13 @@ const Modal = ({
     setFormData({ ...formData, flag: code });
   };
 
+  const handleSubmission = () => {
+    if (challenge.type === 'code') {
+      // If challenge type is 'code', submit the editor output as the answer
+      setAnswer(editorOutput);
+    }
+    handleSubmit(); // Call the handleSubmit function passed as prop
+  };
   if (!isOpen) return null;
 
   return (
@@ -255,7 +262,7 @@ const Modal = ({
           <span>{attempts}/3 attempts</span>
           <button
             className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700"
-            onClick={handleSubmit}
+            onClick={handleSubmission}
           >
             Submit
           </button>

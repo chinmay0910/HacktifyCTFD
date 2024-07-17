@@ -49,7 +49,10 @@ const UserChallengePage = () => {
 
     if (selectedChallenge.type === 'code') {
       // Handle code challenge submission
+     
+      
       const isCorrect = answer.trim() === selectedChallenge.flag.trim();
+    
 
       if (isCorrect) {
         setFeedback('Correct answer!');

@@ -37,7 +37,7 @@ const Navbar = () => {
           <div className="flex space-x-4">
             <Link to="/" className="text-gray-400 hover:text-white">Users</Link>
             <Link to="/" className="text-gray-400 hover:text-white">Teams</Link>
-            <Link to="/scoreboard" className="text-gray-400 hover:text-white">Scoreboard</Link>
+            <Link to="/userChallenges" className="text-gray-400 hover:text-white">Scoreboard</Link>
             <Link to="/challenge" className="text-gray-400 hover:text-white">Challenges</Link>
           </div>
           <div className="flex space-x-4 ms-auto">
