@@ -61,7 +61,7 @@ const challengeSchema = new mongoose.Schema({
     },
     files: { type: [String], default: [] }, // Array of file paths or references
     tags: [String], // Array of tags
-    hints: [String] // Array of hint strings
+    hints: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Hint' }] // Array of hint strings
 });
 
 // Compile model from schema

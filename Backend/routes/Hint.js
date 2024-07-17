@@ -3,7 +3,7 @@ const router = express.Router();
 const Challenge = require('../models/challenge');
 const Hint = require('../models/Hint');
 
-// POST /api/challenges/:challengeId/hints/add
+// POST /api/hints/add/:challengeId
 router.post('/add/:challengeId', async (req, res) => {
   const { challengeId } = req.params;
   const { content, cost } = req.body;
@@ -27,7 +27,7 @@ router.post('/add/:challengeId', async (req, res) => {
   }
 });
 
-// GET /api/challenges/:challengeId/hints
+// GET /api/hints/get/:challengeId
 router.get('/get/:challengeId', async (req, res) => {
   const { challengeId } = req.params;
 
@@ -44,7 +44,7 @@ router.get('/get/:challengeId', async (req, res) => {
   }
 });
 
-// PUT /api/challenges/:challengeId/hints/edit/:hintId
+// PUT /api/hints/edit/:challengeId/hints/:hintId
 router.put('/edit/:challengeId/hints/:hintId', async (req, res) => {
   const { challengeId, hintId } = req.params;
   const { content, cost } = req.body;
@@ -63,7 +63,7 @@ router.put('/edit/:challengeId/hints/:hintId', async (req, res) => {
   }
 });
 
-// DELETE /api/challenges/:challengeId/hints/delete/:hintId
+// DELETE /api/hints/:challengeId/hints/delete/:hintId
 router.delete('/:challengeId/hints/delete/:hintId', async (req, res) => {
   const { challengeId, hintId } = req.params;
 
