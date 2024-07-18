@@ -106,6 +106,16 @@ router.get('/all', async (req, res) => {
     }
 });
 
+router.get('/hints/:id', async (req, res) => {
+  try {
+      const hints = await Challenge.find({_id: req.params.id}).select('hints');
+      res.status(200).json(hints);
+  } catch (error) {
+      console.error('Error fetching challenges:', error);
+      res.status(500).json({ error: 'Failed to fetch challenges', message: error.message });
+  }
+});
+
 
 router.get('/toDisplayAllChallenges', async (req, res) => {
     try {

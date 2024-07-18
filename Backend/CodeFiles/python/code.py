@@ -1,2 +1,2 @@
 # Write your Python code here
-print(42);
+print(42)

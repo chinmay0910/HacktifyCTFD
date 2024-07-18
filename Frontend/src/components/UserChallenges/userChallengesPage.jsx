@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import PageHeader from '../navbar/PageHeader';
 import ChallengeButton from '../ChallengeButtons/buttons';
@@ -42,42 +43,28 @@ const UserChallengePage = () => {
   };
 
   const handleSubmit = () => {
-    if(selectedChallenge.type === 'manual_verification'){
+    if (selectedChallenge.type === 'manual_verification') {
       setFeedback('Your response is submitted for Review!');
-
     }
-
-    if (selectedChallenge.type === 'code') {
-      // Handle code challenge submission
-     
-      
-      const isCorrect = answer.trim() === selectedChallenge.flag.trim();
-    
-
-      if (isCorrect) {
-        setFeedback('Correct answer!');
-        setChallenges(prevChallenges =>
-          prevChallenges.map(challenge =>
-            challenge._id === selectedChallenge._id
-              ? { ...challenge, solved_by_me: true }
-              : challenge
-          )
-        );
-      } else {
-        setAttempts(prev => prev + 1);
-        if (attempts + 1 >= 3) {
-          setFeedback('No more attempts left');
-          setTimeout(closeModal, 2000); // Close modal after 2 seconds
+  
+    const isCorrectAnswer = (answer, flags, flagData) => {
+      for (let i = 0; i < flags.length; i++) {
+        if (flagData[i] === 'case_sensitive') {
+          if (answer.trim() === flags[i].trim()) {
+            return true;
+          }
         } else {
-          setFeedback('Wrong answer, try again.');
+          if (answer.trim().toLowerCase() === flags[i].trim().toLowerCase()) {
+            return true;
+          }
         }
       }
-    } else {
-      // Handle other challenge types (e.g., standard, multiple_choice)
-      const isCorrect = selectedChallenge.flag_data === 'case_sensitive'
-        ? answer === selectedChallenge.flag
-        : answer.toLowerCase() === selectedChallenge.flag.toLowerCase();
-
+      return false;
+    };
+  
+    if (selectedChallenge.type === 'code' || selectedChallenge.type === 'standard' || selectedChallenge.type === 'multiple_choice') {
+      const isCorrect = isCorrectAnswer(answer, selectedChallenge.flag, selectedChallenge.flag_data);
+  
       if (isCorrect) {
         setFeedback('Correct answer!');
         setChallenges(prevChallenges =>
@@ -91,7 +78,7 @@ const UserChallengePage = () => {
         setAttempts(prev => prev + 1);
         if (attempts + 1 >= 3) {
           setFeedback('No more attempts left');
-          setTimeout(closeModal, 2000); // Close modal after 2 seconds
+          setTimeout(closeModal, 2000);
         } else {
           setFeedback('Wrong answer, try again.');
         }
@@ -148,3 +135,4 @@ const UserChallengePage = () => {
 };
 
 export default UserChallengePage;
+
